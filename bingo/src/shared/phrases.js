@@ -1,4 +1,4 @@
- const sentences = {
+ const phrases = {
     1: "El número uno",
     2: "La pareja, los patitos",
     3: "La tercia",
@@ -91,4 +91,4 @@
     90: "La nonagésima, la gran mayoría"
 
 }
-export { sentences };
+export { phrases };
