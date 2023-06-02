@@ -4,8 +4,11 @@ for (let i= 1; i < 91; i++){
     numbers.push(i);
 }
 
-let asertados = [];
+const tablero = [];
+for (let i= 1; i < 91; i++){
+    tablero.push(i);
+}
 
 
 
-export { numbers , asertados };
+export { numbers , tablero };

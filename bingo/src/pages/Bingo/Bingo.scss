@@ -1,3 +1,6 @@
+body{
+    background-color: black;
+}
 .cartones{
     display:flex;
     justify-content: center;
@@ -7,6 +10,10 @@
     height: 360px;
     margin: 5px;
 }
+.casilla.amarillo {
+    background-color: yellow;
+  }
+  
 .carton{
     display:flex;
     justify-content: center;
