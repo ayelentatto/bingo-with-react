@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Bingo.scss";
-import { numbers, tablero } from "../../shared/numbers";
-import { phrases } from "../../shared/phrases";
+import { numbers, tablero } from "../../components/numbers";
+import { phrases } from "../../components/phrases";
 import BingoGrid from "../../components/BingoGrid";
 import BingoHeader from "../../components/BingoHeader";
 import BingoNav from "../../components/BingoNav";
@@ -29,47 +29,15 @@ const speakPhrase = (number) => {
 };
 
 const Bingo = () => {
-  const [cartonesPintados, setCartonesPintados] = useState([]);
-  const [salientes, setSalientes] = useState([]);
-  const [numerosTableroPintados, setNumerosTableroPintados] = useState([]);
-  const [numeroActual, setNumeroActual] = useState(null);
-  const [tableroN, setTablero] = useState(tablero);
+  const [cartones, setcartones] = useState([]); // cartones generados aleatoriamente, no son los seleccionados
+  const [salientes, setSalientes] = useState([]); // lista de salientes
+  const [numeroActual, setNumeroActual] = useState(null); //numero actual
+  const [tableroN, setTablero] = useState(tablero); // literalmente es el tablero
 
-  const [cartones, setCartones] = useState([]);
   const [disponibles, setDisponibles] = useState(numbers);
-  const [cartonesSeleccionados, setCartonesSeleccionados] = useState(cartonesPintados);
 
-  const cambiarClaseCarton = (cartonIndex) => {
-    // Lógica para cambiar la clase del cartón seleccionado
-    // Puedes modificar el estado de cartonesSeleccionados aquí
-    if (cartonesSeleccionados.includes(cartonIndex)) {
-      // Si el cartón ya está seleccionado, se elimina de los cartones seleccionados
-      setCartonesSeleccionados(cartonesSeleccionados.filter((carton) => carton !== cartonIndex));
-    } else {
-      // Si el cartón no está seleccionado, se agrega a los cartones seleccionados
-      setCartonesSeleccionados([...cartonesSeleccionados, cartonIndex]);
-    }
-  };
-  const cambiarClaseNumCarton = (cartonIndex) => {
-    // Lógica para cambiar la clase del cartón seleccionado
-    // Puedes modificar el estado de cartonesSeleccionados aquí
-    const cartonesActualizados = cartonesSeleccionados.map((carton, index) => {
-      if (index === cartonIndex) {
-        const numerosActualizados = carton.map((num) => {
-          const isPintado = salientes.includes(num);
-          if (isPintado && !numerosTableroPintados.includes(num)) {
-            // Si el número está pintado en el tablero y no está en la lista de números pintados del cartón
-            return { numero: num, clase: "pintada" };
-          }
-          return { numero: num, clase: "iiiBingoJsx" };
-        });
-        return numerosActualizados;
-      }
-      return carton;
-    });
-  
-    setCartonesSeleccionados(cartonesActualizados);
-  };
+
+
 
   const newCartones = [];
 
@@ -78,7 +46,7 @@ const Bingo = () => {
     while (newCartones.length < 6) {
       newCartones.push(generarNumsCarton(disponibles));
     }
-    setCartonesPintados(newCartones.map((carton) => carton.map((num) => num)));
+    setcartones(newCartones.map((carton) => carton.map((num) => num)));
   };
   const startGame = () => {
     setInterval(() => {
@@ -91,22 +59,28 @@ const Bingo = () => {
       setSalientes((prevSalientes) => [...prevSalientes, randomNumber]);
       speakPhrase(randomNumber);
       setDisponibles((prevDisponibles) => prevDisponibles.filter((num) => num !== randomNumber));
-      const newCartonesPintados = cartonesPintados.map((carton) => {
+      const newcartones = cartones.map((carton) => {
         const newCartonPintado = carton.map((num) => {
-          const isPintado = salientes.includes(num);
-          if (isPintado && !numerosTableroPintados.includes(num)) {
-            setNumerosTableroPintados((prevNumerosTableroPintados) => [
-              ...prevNumerosTableroPintados,
-              num,
-            ]);
+
+          carton.map((num)=>{
+            return <p
+          key={num}
+          className={
+            salientes.includes(num) 
+              ? "casilla"
+              : "casilla"
           }
-          return <p className={`casilla ${isPintado ? "pintada" : "iiiBingoJsx"}`}>{num}</p>;
+        >
+          {num}
+        </p>;
+          })
+          
         });
         return newCartonPintado;
       });
-      setCartonesPintados(newCartonesPintados);
+      setcartones(newcartones);
       disponibles.splice(randomIndex, 1);
-    }, 2000);
+    }, 200);
   };
 
   const numeroString = (numeroActual) => {
@@ -114,12 +88,22 @@ const Bingo = () => {
     return <p>{stringNumber}</p>;
   };
 
-  useEffect(() => {
+
+
+  const nuevosCartones = ()=>{
     const newCartones = [];
-    while (newCartones.length < 10) {
+    while (newCartones.length < 12) {
       newCartones.push(generarNumsCarton(numbers));
+      setcartones(newCartones.map((carton) => carton.map((num) => <p className="casilla">{num}</p>)));
+
     }
-    setCartonesPintados(newCartones.map((carton) => carton.map((num) => <p className="casilla">{num}</p>)));
+
+  }
+
+  useEffect(() => {
+   
+    nuevosCartones();
+    
   }, []);
 
   return (
@@ -139,21 +123,16 @@ const Bingo = () => {
         <BingoNav
           tableroN={tableroN}
           salientes={salientes}
-          numerosTableroPintados={numerosTableroPintados}
           numeroActual={numeroActual} // Asegúrate de tener esta línea
           numeroString={numeroString}
         />
       </GridItem>
       <GridItem bg="gray.900" area={"main"}>
         <BingoGrid
-          cartonesPintados={cartonesPintados}
-          salientes={salientes}
-          numeroActual={numeroActual} // Asegúrate de tener esta línea
           disponibles={disponibles}
-          onCartonesGenerados={setCartonesPintados}
-          cartonesSeleccionados={cartonesSeleccionados} 
-          cambiarClaseCarton={cambiarClaseCarton}
-          cambiarClaseNumCarton={cambiarClaseNumCarton}
+          salientes={salientes}
+          cartones={cartones}
+          nuevosCartones={nuevosCartones}
         />
       </GridItem>
       <GridItem pl="2" bg="gray.700" area={"footer"}>

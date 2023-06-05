@@ -5,7 +5,6 @@ import { Box, SimpleGrid, Circle } from "@chakra-ui/react";
 const BingoNav = ({
   tableroN,
   salientes,
-  numerosTableroPintados,
   numeroActual,
   numeroString,
 }) => {
@@ -17,7 +16,7 @@ const BingoNav = ({
             <p
               key={num}
               className={
-                salientes.includes(num) || numerosTableroPintados.includes(num)
+                salientes.includes(num) 
                   ? "tablero pintado"
                   : "tablero"
               }
@@ -37,7 +36,7 @@ const BingoNav = ({
         <Box bg="gray.800" height="80px">
           <Box mt="30px" mr="20px" color="white" size="50px">
             <p className="countt">
-              {salientes.length} - 90
+              {salientes.length <= 90 ? salientes.length : 90} - 90
             </p>
           </Box>
         </Box>
