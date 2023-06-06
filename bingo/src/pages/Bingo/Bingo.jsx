@@ -37,17 +37,6 @@ const Bingo = () => {
   const [disponibles, setDisponibles] = useState(numbers);
 
 
-
-
-  const newCartones = [];
-
-  const generarCartones = () => {
-    const disponibles = [...salientes];
-    while (newCartones.length < 6) {
-      newCartones.push(generarNumsCarton(disponibles));
-    }
-    setcartones(newCartones.map((carton) => carton.map((num) => num)));
-  };
   const startGame = () => {
     setInterval(() => {
       const newAvailableNumbers = disponibles.filter((num) => num !== numeroActual);
@@ -59,28 +48,9 @@ const Bingo = () => {
       setSalientes((prevSalientes) => [...prevSalientes, randomNumber]);
       speakPhrase(randomNumber);
       setDisponibles((prevDisponibles) => prevDisponibles.filter((num) => num !== randomNumber));
-      const newcartones = cartones.map((carton) => {
-        const newCartonPintado = carton.map((num) => {
-
-          carton.map((num)=>{
-            return <p
-          key={num}
-          className={
-            salientes.includes(num) 
-              ? "casilla"
-              : "casilla"
-          }
-        >
-          {num}
-        </p>;
-          })
-          
-        });
-        return newCartonPintado;
-      });
-      setcartones(newcartones);
+      
       disponibles.splice(randomIndex, 1);
-    }, 200);
+    }, 500);
   };
 
   const numeroString = (numeroActual) => {

@@ -19,41 +19,83 @@ import {
 
 const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, nuevosCartones }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isOpenLine, setIsOpenLine] = useState(false);
 
   const [seleccionados, setSeleccionados] = useState([]);
-  const [lineaPintada, setLineaPintada] = useState(false);
-  const [alertaMostrada, setAlertaMostrada] = useState(false);
   const cartonesRefs = useRef([]); // Referencias a los elementos de cartones
 
-  useEffect(() => {
-    const verificarPremios = () => {
-      seleccionados.forEach((carton, index) => {
-        const primerosNumeros = carton.slice(0, 5);
-        const todosPintados = primerosNumeros.every((num) => {
-          const pElement = cartonesRefs.current[index] && cartonesRefs.current[index][num - 1]; // Verifica si la referencia existe antes de acceder al elemento de párrafo
-      
-        });
+  const [lineaPintada, setLineaPintada] = useState(false);
+  const [segundaLineaPintada, setSegundaLineaPintada] = useState(false);
+  const [cartonPintado, setCartonPintado] = useState(false);
 
-        if (todosPintados) {
+
+  const [alert1, setAlert1] = useState(false);
+  const [alert2, setAlert2] = useState(false);
+  const [alert3, setAlert3] = useState(false);
+
+
+
+  useEffect(() => {
+
+    const verificarPremios = () => {
+      const primerosCincoIndices = [0, 3, 6, 9, 12];
+      const segundosCincoIndices = [1, 4, 7, 10, 13];
+      const tercerosCincoIndices = [2, 5, 8, 11, 14];
+
+      seleccionados.forEach((carton, index) => {
+        const pElement = cartonesRefs.current[index]; // Verifica si la referencia existe antes de acceder al elemento de párrafo
+        const primerosCincoPintados = primerosCincoIndices.every((idx) => {
+          return pElement[idx].className === "casilla pintada";
+        });
+  
+        const segundosCincoPintados = segundosCincoIndices.every((idx) => {
+          return pElement[idx].className === "casilla pintada";
+        });
+  
+        const tercerosCincoPintados = tercerosCincoIndices.every((idx) => {
+          return pElement[idx].className === "casilla pintada";
+        });
+  
+        if (primerosCincoPintados && !alert1 || segundosCincoPintados && !alert1 || tercerosCincoPintados && !alert1) {
+          setAlert1(true);
           setLineaPintada(true);
-          setAlertaMostrada(true);
+          setInterval(() => {
+            setLineaPintada(false)
+          }, 5000);
+        }
+        // Nueva condición para "Dos líneas han sido pintadas"
+        if ((primerosCincoPintados && segundosCincoPintados && !alert2) ||
+            (segundosCincoPintados && tercerosCincoPintados && !alert2) ||
+            (primerosCincoPintados && tercerosCincoPintados && !alert2)) {
+          setAlert2(true);
+          setSegundaLineaPintada(true);
+          setInterval(() => {
+            setSegundaLineaPintada(false)
+          }, 5000);
+        }
+
+        // Nueva condición para "Tres líneas pintadas, ¡BINGO!"
+        if (primerosCincoPintados && segundosCincoPintados && tercerosCincoPintados && !alert3) {
+          setAlert3(true)
+          setCartonPintado(true);
+          setInterval(() => {
+            setCartonPintado(false)
+          }, 5000);
         }
       });
+      
     };
 
     const actualizarClases = () => {
       seleccionados.forEach((carton, index) => {
         const pElements = cartonesRefs.current[index]; // Obtiene los elementos de párrafo del cartón correspondiente
-        console.log(pElements)
         pElements.forEach((p) => {
           const num = parseInt(p.textContent);
-          const isPintado = num === numeroActual || !disponibles.includes(num) || salientes.includes(num) ;
+          const isPintado = num === numeroActual || !disponibles.includes(num) || salientes.includes(num);
           p.className = isPintado ? "casilla pintada" : "casilla";
-          console.log(p)
         });
       });
     };
+    
 
     const interval = setInterval(() => {
       actualizarClases();
@@ -65,16 +107,6 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, nuevosCarto
     };
   }, [seleccionados, numeroActual, disponibles, salientes]);
 
-  
-
-  
-
-  useEffect(() => {
-    if (lineaPintada) {
-      // Mostrar la alerta cuando se completa una línea
-      setIsOpenLine(true);
-    }
-  }, [lineaPintada]);
 
   return (
     <main>
@@ -83,7 +115,23 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, nuevosCarto
           {lineaPintada && (
             <Alert status="success" mt={4}>
               <AlertIcon />
-              ¡Línea Pintada!
+              ¡Primer línea Pintada!
+            </Alert>
+          )}
+        </Box>
+        <Box>
+          {segundaLineaPintada && (
+            <Alert status="success" mt={4}>
+              <AlertIcon />
+              ¡Segunda línea Pintada!
+            </Alert>
+          )}
+        </Box>
+        <Box>
+          {cartonPintado && (
+            <Alert status="success" mt={4}>
+              <AlertIcon />
+              ¡Bingo!
             </Alert>
           )}
         </Box>
@@ -104,6 +152,8 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, nuevosCarto
                 bg={seleccionados.includes(carton) ? "green.500" : "rgb(37, 2, 105)"}
                 key={index1}
                 className="carton"
+                flexDirection="column-reverse"
+                flexWrap="wrap"
                 onClick={() => {
                   if (seleccionados.includes(carton)) {
                     // Si el cartón ya está seleccionado, se elimina de los cartones seleccionados
@@ -114,20 +164,7 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, nuevosCarto
                   }
                 }}
               >
-                {carton.map((num, index) => (
-                  <p
-                    key={index}
-                    className={(() => {
-                      if (num === numeroActual || !disponibles.includes(num) || salientes.includes(num)) {
-                        return "truee";
-                      } else {
-                        return "false";
-                      }
-                    })()}
-                  >
-                    {num}
-                  </p>
-                ))}
+                {carton}
               </GridItem>
               
               ))}
@@ -154,18 +191,7 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, nuevosCarto
             flexWrap="wrap"
             ref={(el) => (cartonesRefs.current[index1] = el?.querySelectorAll("p"))}
           >
-            {carton.map((num, index) => (
-              <p
-                key={num}
-                className={
-                  salientes.includes(num)
-                    ? "numero pintado"
-                    : "numero"
-                }
-              >
-                {num}
-              </p>
-            ))}
+            {carton}
           </GridItem>
         ))}
       </Grid>
