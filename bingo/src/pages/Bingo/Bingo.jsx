@@ -7,6 +7,8 @@ import BingoHeader from "../../components/BingoHeader";
 import BingoNav from "../../components/BingoNav";
 import BingoFooter from "../../components/BingoFooter";
 import { Grid, GridItem, Button } from "@chakra-ui/react";
+import DrawerCardboards from "../../components/DrawerCardboards";
+import Speak from "../../BotVoice";
 
 const generarNumsCarton = (disponibles) => {
   const nums = [];
@@ -22,10 +24,12 @@ const generarNumsCarton = (disponibles) => {
 
 const speakPhrase = (number) => {
   const phrase = phrases[number];
-  if (phrase) {
-    const utterance = new SpeechSynthesisUtterance(phrase);
-    speechSynthesis.speak(utterance);
+  
+  Speak(number);
+  if (phrase && Math.floor(Math.random() * 7) === 0 ) {
+    Speak(phrase);
   }
+
 };
 
 const Bingo = () => {
@@ -33,6 +37,8 @@ const Bingo = () => {
   const [salientes, setSalientes] = useState([]); // lista de salientes
   const [numeroActual, setNumeroActual] = useState(null); //numero actual
   const [tableroN, setTablero] = useState(tablero); // literalmente es el tablero
+  const [isOpen, setIsOpen] = useState(false);
+  const [seleccionados, setSeleccionados] = useState([]);
 
   const [disponibles, setDisponibles] = useState(numbers);
 
@@ -50,7 +56,7 @@ const Bingo = () => {
       setDisponibles((prevDisponibles) => prevDisponibles.filter((num) => num !== randomNumber));
       
       disponibles.splice(randomIndex, 1);
-    }, 500);
+    }, 2500);
   };
 
   const numeroString = (numeroActual) => {
@@ -62,7 +68,7 @@ const Bingo = () => {
 
   const nuevosCartones = ()=>{
     const newCartones = [];
-    while (newCartones.length < 12) {
+    while (newCartones.length < 50) {
       newCartones.push(generarNumsCarton(numbers));
       setcartones(newCartones.map((carton) => carton.map((num) => <p className="casilla">{num}</p>)));
 
@@ -103,9 +109,18 @@ const Bingo = () => {
           salientes={salientes}
           cartones={cartones}
           nuevosCartones={nuevosCartones}
+          startGame={startGame}
         />
       </GridItem>
       <GridItem pl="2" bg="gray.700" area={"footer"}>
+      <DrawerCardboards
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        cartones={cartones}
+        seleccionados={seleccionados}
+        setSeleccionados={setSeleccionados}
+      />
+
         <BingoFooter startGame={startGame} />
       </GridItem>
     </Grid>
