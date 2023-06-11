@@ -42,10 +42,8 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, startGame }
 
   const cartonesRefs = useRef([]);// Referencia a los cartones
 
-  const [contadorInicial, setContadorInicial] = useState(25); //Cuenta regresiva ocmienzo del juego
+  const [contadorInicial, setContadorInicial] = useState(5); //Cuenta regresiva ocmienzo del juego
   
-
-
   useEffect(() => {
     
     const verificarPremios = () => {
@@ -134,14 +132,13 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, startGame }
           startGame();
           setJuegoEmpezado(true);
         }
-
       }
       
       
       
     }, 1000);
 
-    if (contadorInicial <= 0) {
+    if (contadorInicial <= 0) {      
       clearInterval(intervalI);
       setIsOpen(false);
       if(!juegoEmpezado){
@@ -150,7 +147,7 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, startGame }
       }
     }
     if(contadorInicial == 20 && !gameStartAnnounced){
-      Speak("ultimos segundos para seleccionar cartones");
+      Speak("Últimos segundos para seleccionar cartones");
       setGameStartAnnounced(true);
       //tengo que agregar una variable ede bcontrol
     }
@@ -180,24 +177,29 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, startGame }
 
   return (
     <main>
-      <div onChange ={() => {
-                    if (contadorInicial === 20) {
-                      Speak("Últimos segundos para seleccionar cartones!");
-                      return; // No hacer nada si el contador inicial es 0
-                    }
-                    if (contadorInicial === 8) {
-                      Speak("Él juego comenzará en unos segundos! Mucha suerte!");
-                      return; // No hacer nada si el contador inicial es 0
-                    }
-                  }
-                }
-          ><p className="contadorPantalla">El juego comenzará en: {contadorInicial} segundos</p></div>
-      <Center mt={30}>
-        <LineAlert show={lineaPintada} message="¡Primer línea Pintada!" />
-        <LineAlert show={segundaLineaPintada} message="¡Segunda línea Pintada!" />
-        <LineAlert show={cartonPintado} message="¡Bingo!" />
-        <Button onClick={() => setIsOpen(true)}>Seleccionar Cartones</Button>
-      </Center>
+
+<Grid templateColumns='repeat(3, 1fr)' gap={1}>
+  <GridItem w='203%' h='10' bgGradient="linear(to-r, #000000, #9f94ea)" color='#7d74bf' >
+  {contadorInicial > 0 ? (
+      <p >El juego comenzará en: {contadorInicial} segundos</p>
+    ) : (
+      <p>Partida en curso</p>
+    )}
+  </GridItem>
+  <GridItem w='52%' h='10' bg='#160e0f' >
+  <Center >
+      <Button colorScheme='#160e0f' onClick={() => setIsOpen(true)}>Seleccionar Cartones</Button>
+    </Center>
+  </GridItem>
+  <GridItem w='100%' h='10' bgGradient="linear(to-r, #9f94ea , #000000)">
+  <LineAlert show={lineaPintada} message="¡Primer línea Pintada!" />
+    <LineAlert show={segundaLineaPintada} message="¡Segunda línea Pintada!" />
+    <LineAlert show={cartonPintado} message="¡Bingo!" />
+  </GridItem>
+  </Grid>
+      
+
+      
 
       <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} size="xl">
         <DrawerOverlay />

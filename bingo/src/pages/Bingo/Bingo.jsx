@@ -59,10 +59,7 @@ const Bingo = () => {
     }, 2500);
   };
 
-  const numeroString = (numeroActual) => {
-    const stringNumber = numeroActual.toString();
-    return <p>{stringNumber}</p>;
-  };
+  
 
 
 
@@ -84,7 +81,7 @@ const Bingo = () => {
 
   return (
     <Grid
-      templateAreas={`"header header" "nav main" "nav footer"`}
+      templateAreas={`"header header" "nav main" `}
       gridTemplateRows={"80px 1fr 100px"}
       gridTemplateColumns={"330px 1fr"}
       h="500px"
@@ -92,18 +89,17 @@ const Bingo = () => {
       color="blackAlpha.900"
       fontWeight="bold"
     >
-      <GridItem pl="2" bg="gray.600" area={"header"}>
+      <GridItem pl="2" bg="#2B2132" area={"header"}>
         <BingoHeader salientes={salientes} />
       </GridItem>
-      <GridItem pl="2" bg="gray.800" area={"nav"}>
+      <GridItem pl="2" bg="#598084" area={"nav"}>
         <BingoNav
           tableroN={tableroN}
           salientes={salientes}
           numeroActual={numeroActual} // Asegúrate de tener esta línea
-          numeroString={numeroString}
         />
       </GridItem>
-      <GridItem bg="gray.900" area={"main"}>
+      <GridItem bg="#38364a" area={"main"}>
         <BingoGrid
           disponibles={disponibles}
           salientes={salientes}
@@ -112,17 +108,7 @@ const Bingo = () => {
           startGame={startGame}
         />
       </GridItem>
-      <GridItem pl="2" bg="gray.700" area={"footer"}>
-      <DrawerCardboards
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        cartones={cartones}
-        seleccionados={seleccionados}
-        setSeleccionados={setSeleccionados}
-      />
-
-        <BingoFooter startGame={startGame} />
-      </GridItem>
+      
     </Grid>
   );
 };
