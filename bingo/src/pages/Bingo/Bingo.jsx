@@ -5,9 +5,7 @@ import { phrases } from "../../components/phrases";
 import BingoGrid from "../../components/BingoGrid";
 import BingoHeader from "../../components/BingoHeader";
 import BingoNav from "../../components/BingoNav";
-import BingoFooter from "../../components/BingoFooter";
-import { Grid, GridItem, Button } from "@chakra-ui/react";
-import DrawerCardboards from "../../components/DrawerCardboards";
+import { Grid, GridItem } from "@chakra-ui/react";
 import Speak from "../../BotVoice";
 
 const generarNumsCarton = (disponibles) => {
@@ -37,8 +35,6 @@ const Bingo = () => {
   const [salientes, setSalientes] = useState([]); // lista de salientes
   const [numeroActual, setNumeroActual] = useState(null); //numero actual
   const [tableroN, setTablero] = useState(tablero); // literalmente es el tablero
-  const [isOpen, setIsOpen] = useState(false);
-  const [seleccionados, setSeleccionados] = useState([]);
 
   const [disponibles, setDisponibles] = useState(numbers);
 

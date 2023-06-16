@@ -2,14 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import Speak from "../BotVoice";
 import LineAlert from "./LineAlert";
 import {
-  useBoolean,
-  Alert,
-  AlertIcon,
   Grid,
   GridItem,
   Center,
   Button,
-  Box,
   Drawer,
   DrawerBody,
   DrawerFooter,
@@ -42,7 +38,7 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, startGame }
 
   const cartonesRefs = useRef([]);// Referencia a los cartones
 
-  const [contadorInicial, setContadorInicial] = useState(5); //Cuenta regresiva ocmienzo del juego
+  const [contadorInicial, setContadorInicial] = useState(25); //Cuenta regresiva ocmienzo del juego
   
   useEffect(() => {
     

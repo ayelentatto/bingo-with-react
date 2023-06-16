@@ -1,8 +1,7 @@
 // BingoNav.jsx
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Box, SimpleGrid, Circle } from "@chakra-ui/react";
 //instale : 1:numeros-a-letras ,numeral, toWords
-
 
 
 const BingoNav = ({
