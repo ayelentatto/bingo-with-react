@@ -76,9 +76,9 @@ const BingoGrid = ({ cartones, numeroActual, disponibles, salientes, startGame }
         }
 
         if (
-          (primerosCincoPintados && segundosCincoPintados) && !alert2 ||
-          (segundosCincoPintados && tercerosCincoPintados) && !alert2 ||
-          (primerosCincoPintados && tercerosCincoPintados) && !alert2
+          ((primerosCincoPintados && segundosCincoPintados) ||
+          (segundosCincoPintados && tercerosCincoPintados) ||
+          (primerosCincoPintados && tercerosCincoPintados)) && !alert2
         ) {
           Speak("Segunda Linea!!! felicidades!")
 
